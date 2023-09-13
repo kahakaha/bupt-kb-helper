@@ -2,9 +2,18 @@ from bs4 import BeautifulSoup as BS
 import re
 import sys
 import os
+import argparse
 
 # regular expression for extracting subject information
-SUBJECT_REGEX = re.compile(r'\[(\w+)\](.+)｛(\d+-\d+)周\[教师:(\w+),地点:(\d+-\d+)\]｝')
+SUBJECT_REGEX = re.compile(r'\[(\w+)\](.+)｛(\d+-\d+)周\[教师:(\w+),地点:(.+)\]｝')
+# argument parser
+PARSER = argparse.ArgumentParser(
+    prog='bupt-kb-helper',
+    description="This script helps graduate students from BUPT import their subject into WakeUp App"
+)
+PARSER.add_argument('-i', '--input', default='', help='html file path,  declare it or let script find itself')
+PARSER.add_argument('-t', '--type', choices=['csv', 'ics'], default='csv', help='output file type, default is csv')
+PARSER.add_argument('-o', '--output', default='kb', help='output file name, default is kb')
 
 # subject information
 class Subject(object):
@@ -20,14 +29,18 @@ class Subject(object):
 
     # this method return a csv row which stands for this subject
     def to_csv(self) -> str:
-        return f'{self.name},{self.weekday},{self.start},{self.end},{self.teacher},{self.dst},{self.week_number}\n'
+        return f'{self.name},{self.weekday},{self.start},{self.end},{self.teacher},{self.dst},{self.week_number}'
+
 
 if __name__ == "__main__":
-    # parse the html file 
-    html_path = ''
-    if len(sys.argv) > 1:
-        html_path = sys.argv[1]
-    else:
+    # parse arguments
+    args=PARSER.parse_args()
+    html_path = args.input
+    output_type = args.type
+    output_name = args.output
+
+    # read html file
+    if html_path == '':
         for root, dirs, files in os.walk('.'):
             for name in files:
                 if name == 'loging.html':
@@ -61,7 +74,7 @@ if __name__ == "__main__":
             if 'rowspan' in td_attrs and int(td_attrs['rowspan']) > 1:
                 rowspan = int(td_attrs['rowspan'])
                 sub = Subject(td.text.strip(), weekday+1, section, rowspan)
-                subject_tables.append(sub.to_csv())
+                subject_tables.append(sub)
                 td_void[weekday] = rowspan
             weekday += 1
         # maintain td_void, every non-zero element should minus 1
@@ -70,11 +83,15 @@ if __name__ == "__main__":
                 td_void[i] -= 1
     
     # export csv file
-    try: 
-        with open('./kb.csv', 'w+', encoding='utf8') as f:
-            f.write("课程名称,星期,开始节数,结束节数,老师,地点,周数\n")
-            f.writelines(subject_tables)
-            print(f'{len(subject_tables)} subjects have been exported')
-    except Exception as e:
-        print(e)
-        print("can't write csv file")
+    if output_type == 'csv':
+        csv = "课程名称,星期,开始节数,结束节数,老师,地点,周数\n"
+        for subject in subject_tables:
+            csv = csv + subject.to_csv() + '\n'
+        try: 
+            with open(f'./{output_name}.csv', 'w+', encoding='utf8') as f:
+                f.write(csv)
+        except Exception as e:
+            print(e)
+            print("can't write csv file")
+    
+    print(f'{len(subject_tables)} subjects have been exported')

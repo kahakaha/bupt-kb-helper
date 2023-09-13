@@ -4,9 +4,11 @@
 
 ## 准备工作
 
-这个脚本需要使用`beautifulsoup`来对原始的html文件进行分析
+这个脚本需要使用`beautifulsoup`来对原始的html文件进行分析,你可以使用以下指令安装相关的依赖
 
-`pip install beautifulsoup4`
+```bash
+pip install -r requirements.txt
+```
 
 ## 获取你的课表页面源码
 
@@ -22,15 +24,19 @@
 
 - 下载完成后，你的根目录会出现“北京邮电大学研究生信息数字化管理系统”的文件夹和单个html文件
 
-## python脚本，启动！
+## 脚本，启动！
 
 直接在项目根目录运行python脚本，脚本会自动分析你的课表，并将结果输出到一个名为`kb.csv`的文件中。
 
-`python main.py`
+```bash
+python main.py
+```
 
 或者，你是一个比较厉害的人，你找到了含有课表的html文件，你也可以使用以下命令对课表进行分析。
 
-`python main.py <html路径>`
+```bash
+python main.py <html路径>
+```
 
 ## 导入课表到wakeup
 

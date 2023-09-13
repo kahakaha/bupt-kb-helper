@@ -1,4 +1,8 @@
-*_files
+*_files/
+venv/
+.vscode/
+.idea/
+
 *.html
 *.csv
-venv
+*.ics

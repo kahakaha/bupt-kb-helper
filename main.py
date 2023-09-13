@@ -14,13 +14,13 @@ class Subject(object):
         self.weekday = weekday
         self.start = start
         self.end = start + rowspan - 1
-        self.weektime = tmp_m[2]
+        self.week_number = tmp_m[2]
         self.teacher = tmp_m[3]
         self.dst = f'{tmp_m[0]}{tmp_m[4]}'
 
     # this method return a csv row which stands for this subject
     def to_csv(self) -> str:
-        return f'{self.name},{self.weekday},{self.start},{self.end},{self.teacher},{self.dst},{self.weektime}\n'
+        return f'{self.name},{self.weekday},{self.start},{self.end},{self.teacher},{self.dst},{self.week_number}\n'
 
 if __name__ == "__main__":
     # find the html file path
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     trs = table.find_all('tr')
     # subject_tables saves all your subject
     subject_tables = list()
-    # record the skiped weekday in a table row
+    # record the skipped weekday in a table row
     td_void = [0,0,0,0,0,0,0]
     for section in range(1,16):
         tds = trs[section].find_all('td')
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         with open('./kb.csv', 'w+', encoding='utf8') as f:
             f.write("课程名称,星期,开始节数,结束节数,老师,地点,周数\n")
             f.writelines(subject_tables)
-            print(f'{len(subject_tables)} subjects hava been exported')
+            print(f'{len(subject_tables)} subjects have been exported')
     except Exception as e:
         print(e)
-        print("can't wirte csv file")
+        print("can't write csv file")

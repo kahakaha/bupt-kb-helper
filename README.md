@@ -1,6 +1,6 @@
 # bupt-kb-helper
 
-这个脚本可以帮助来自北邮的研究生将课表导入到wakeup课程表中
+这个脚本可以帮助来自北邮的研究生将课表导入到WakeUp课程表中
 
 ## 准备工作
 
@@ -38,7 +38,7 @@ python main.py
 python main.py <html路径>
 ```
 
-## 导入课表到wakeup
+## 导入课表到WakeUp
 
 点击下图的小按钮，选择从文件导入-从csv，将`kb.csv`导入
 

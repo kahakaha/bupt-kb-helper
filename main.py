@@ -23,7 +23,7 @@ class Subject(object):
         return f'{self.name},{self.weekday},{self.start},{self.end},{self.teacher},{self.dst},{self.week_number}\n'
 
 if __name__ == "__main__":
-    # find the html file path
+    # parse the html file 
     html_path = ''
     if len(sys.argv) > 1:
         html_path = sys.argv[1]
@@ -50,9 +50,12 @@ if __name__ == "__main__":
     td_void = [0,0,0,0,0,0,0]
     for section in range(1,16):
         tds = trs[section].find_all('td')
+        # remove the first td, because it is the section number
         tds.pop(0)
         weekday = 0
         for td in tds:
+            # because of the merged cells, some row have <td> less than 7. 
+            # to make weekday correct, these "missing" <td> should be taken into account.
             weekday += 1 if td_void[weekday] != 0 else 0
             td_attrs = td.attrs
             if 'rowspan' in td_attrs and int(td_attrs['rowspan']) > 1:
@@ -61,6 +64,7 @@ if __name__ == "__main__":
                 subject_tables.append(sub.to_csv())
                 td_void[weekday] = rowspan
             weekday += 1
+        # maintain td_void, every non-zero element should minus 1
         for i in range(0,7):
             if td_void[i] != 0:
                 td_void[i] -= 1

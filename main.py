@@ -4,7 +4,7 @@ import sys
 import os
 
 # regular expression for extracting subject information
-SUBJECT_REGEX = re.compile(r'\[(\w+)\](.+)｛(\d+-\d+)周\[教师:(\w+),地点:(\d+-\d+)\]｝')
+SUBJECT_REGEX = re.compile(r'\[(\w+)\](.+)｛(\d+-\d+)周\[教师:(\w+),地点:(.+)\]｝')
 
 # subject information
 class Subject(object):
